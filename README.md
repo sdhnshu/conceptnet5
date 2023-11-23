@@ -1,5 +1,7 @@
 # ConceptNet
 
+tested on py3.8
+use pip install ipadic apart from the steps mentioned in https://github.com/commonsense/conceptnet5/wiki/Build-process
 
 ## Overview
 
@@ -27,7 +29,6 @@ languages through a collaboration with groups around the
 world. ConceptNet is cited in many research papers, and its public API
 gets over 50,000 hits per day.
 
-
 This Python package contains a toolset for building the ConceptNet 5
 knowledge graph, possibly with your own custom data, and it serves the
 HTML interface and JSON Web API for it.
@@ -41,7 +42,6 @@ Further documentation is available on the [ConceptNet wiki][].
 Licensing and attribution appear in `LICENSE.txt` and
 `DATA-CREDITS.md`.
 
-
 ## Discussion groups
 
 If you're interested in using ConceptNet, please join the
@@ -50,7 +50,6 @@ announcements: http://groups.google.com/group/conceptnet-users?hl=en
 
 For real-time discussion, ConceptNet also has a chat channel on
 Gitter: https://gitter.im/commonsense/conceptnet5
-
 
 ## Installing and building ConceptNet
 
@@ -65,7 +64,6 @@ first.
 [build process]: https://github.com/commonsense/conceptnet5/wiki/Build-process
 [Web API]: https://github.com/commonsense/conceptnet5/wiki/API
 [ConceptNet wiki]: https://github.com/commonsense/conceptnet5/wiki
-
 
 ## Testing
 

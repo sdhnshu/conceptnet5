@@ -10,10 +10,10 @@ environment variables:
 """
 import os
 
-DB_NAME = os.environ.get('CONCEPTNET_DB_NAME', 'conceptnet5')
+DB_NAME = os.environ.get("CONCEPTNET_DB_NAME", "conceptnet5")
 
 # These will not be used if DB_PASSWORD is blank -- instead, we'll use a socket
-DB_USERNAME = os.environ.get('CONCEPTNET_DB_USER', os.environ.get('USER', 'postgres'))
-DB_PASSWORD = os.environ.get('CONCEPTNET_DB_PASSWORD', '')
-DB_HOSTNAME = os.environ.get('CONCEPTNET_DB_HOSTNAME', 'localhost')
-DB_PORT = int(os.environ.get('CONCEPTNET_DB_PORT', '5432'))
+DB_USERNAME = os.environ.get("CONCEPTNET_DB_USER", "postgres")
+DB_PASSWORD = os.environ.get("CONCEPTNET_DB_PASSWORD", "postgres")
+DB_HOSTNAME = os.environ.get("CONCEPTNET_DB_HOSTNAME", "localhost")
+DB_PORT = int(os.environ.get("CONCEPTNET_DB_PORT", "5432"))

@@ -1,10 +1,10 @@
 import itertools
 import json
 
-from conceptnet5.db.config import DB_NAME
+from ftfy.fixes import remove_control_chars
+
 from conceptnet5.db.connection import get_db_connection
 from conceptnet5.edges import transform_for_linked_data
-from ftfy.fixes import remove_control_chars
 
 LIST_QUERIES = {}
 FEATURE_QUERIES = {}
@@ -90,21 +90,21 @@ def gin_jsonb_value(criteria, node_forward=True):
     `node_forward` is True and once where it is False.
     """
     criteria_map = {
-        'start': 'start',
-        'end': 'end',
-        'rel': 'rel',
-        'dataset': 'dataset',
+        "start": "start",
+        "end": "end",
+        "rel": "rel",
+        "dataset": "dataset",
         # edges have a 'sources' element, but the query key we've historically
         # accepted is 'source', so let's just accept both
-        'source': 'sources',
-        'sources': 'sources',
+        "source": "sources",
+        "sources": "sources",
     }
     if node_forward:
-        criteria_map['node'] = 'start'
-        criteria_map['other'] = 'end'
+        criteria_map["node"] = "start"
+        criteria_map["other"] = "end"
     else:
-        criteria_map['node'] = 'end'
-        criteria_map['other'] = 'start'
+        criteria_map["node"] = "end"
+        criteria_map["other"] = "start"
 
     query = {}
     for criterion_in, criterion_out in criteria_map.items():
@@ -125,7 +125,7 @@ class AssertionFinder(object):
         self.dbname = dbname
 
     @property
-    def connection():
+    def connection(self):
         # See https://www.psycopg.org/docs/connection.html#connection.closed
         if self._connection is None or self._connection.closed > 0:
             self._connection = get_db_connection(self.dbname)
@@ -135,15 +135,15 @@ class AssertionFinder(object):
         """
         A query that returns all the edges that include a certain URI.
         """
-        if uri.startswith('/c/') or uri.startswith('http'):
-            criteria = {'node': uri}
-        elif uri.startswith('/r/'):
-            criteria = {'rel': uri}
-        elif uri.startswith('/s/'):
-            criteria = {'source': uri}
-        elif uri.startswith('/d/'):
-            criteria = {'dataset': uri}
-        elif uri.startswith('/a/'):
+        if uri.startswith("/c/") or uri.startswith("http"):
+            criteria = {"node": uri}
+        elif uri.startswith("/r/"):
+            criteria = {"rel": uri}
+        elif uri.startswith("/s/"):
+            criteria = {"source": uri}
+        elif uri.startswith("/d/"):
+            criteria = {"dataset": uri}
+        elif uri.startswith("/a/"):
             return self.lookup_assertion(uri)
         else:
             raise ValueError("%r isn't a ConceptNet URI that can be looked up")
@@ -169,15 +169,15 @@ class AssertionFinder(object):
             # (in most cases) didn't match the URI. If both start with our
             # given URI, take the longer one, which is either a more specific
             # sense or a different, longer word.
-            shorter, longer = sorted([data['start'], data['end']], key=len)
+            shorter, longer = sorted([data["start"], data["end"]], key=len)
             if shorter.startswith(uri):
-                data['other'] = longer
+                data["other"] = longer
             else:
-                data['other'] = shorter
+                data["other"] = shorter
             return data
 
         cursor = self.connection.cursor()
-        cursor.execute(NODE_TO_FEATURE_QUERY, {'node': uri, 'limit': limit})
+        cursor.execute(NODE_TO_FEATURE_QUERY, {"node": uri, "limit": limit})
         results = {}
         for feature, rows in itertools.groupby(cursor.fetchall(), extract_feature):
             results[feature] = [
@@ -193,7 +193,7 @@ class AssertionFinder(object):
         # remove \x00 anyway, but this avoids reporting a server error when that happens.
         uri = remove_control_chars(uri)
         cursor = self.connection.cursor()
-        cursor.execute("SELECT data FROM edges WHERE uri=%(uri)s", {'uri': uri})
+        cursor.execute("SELECT data FROM edges WHERE uri=%(uri)s", {"uri": uri})
         results = [transform_for_linked_data(data) for (data,) in cursor.fetchall()]
         return results
 
@@ -201,7 +201,7 @@ class AssertionFinder(object):
         """
         Get a collection of distinct, randomly-selected edges.
         """
-        if self.dbname == 'conceptnet-test':
+        if self.dbname == "conceptnet-test":
             # Random queries sample 10% of edges. This makes sure we get matches in
             # the test database, where there isn't much data.
             random_query = """
@@ -218,7 +218,7 @@ class AssertionFinder(object):
             """
 
         cursor = self.connection.cursor()
-        cursor.execute(random_query, {'limit': limit})
+        cursor.execute(random_query, {"limit": limit})
         results = [
             transform_for_linked_data(data) for uri, data, weight in cursor.fetchall()
         ]
@@ -229,23 +229,23 @@ class AssertionFinder(object):
         The most general way to query based on a set of criteria.
         """
         cursor = self.connection.cursor()
-        if 'node' in criteria:
+        if "node" in criteria:
             query_forward = gin_jsonb_value(criteria, node_forward=True)
             query_backward = gin_jsonb_value(criteria, node_forward=False)
             cursor.execute(
                 GIN_QUERY_2WAY,
                 {
-                    'query_forward': jsonify(query_forward),
-                    'query_backward': jsonify(query_backward),
-                    'limit': limit,
-                    'offset': offset,
+                    "query_forward": jsonify(query_forward),
+                    "query_backward": jsonify(query_backward),
+                    "limit": limit,
+                    "offset": offset,
                 },
             )
         else:
             query = gin_jsonb_value(criteria)
             cursor.execute(
                 GIN_QUERY_1WAY,
-                {'query': jsonify(query), 'limit': limit, 'offset': offset},
+                {"query": jsonify(query), "limit": limit, "offset": offset},
             )
 
         results = [
