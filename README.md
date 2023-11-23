@@ -1,7 +1,12 @@
 # ConceptNet
 
 tested on py3.8
-use pip install ipadic apart from the steps mentioned in https://github.com/commonsense/conceptnet5/wiki/Build-process
+
+use pip install ipadic apart from the steps mentioned in [conceptnet5/wiki/Build-process](https://github.com/commonsense/conceptnet5/wiki/Build-process)
+
+or download it prebuilt (5.7) from [conceptnet5/wiki/Downloads](https://github.com/commonsense/conceptnet5/wiki/Downloads)
+
+or download the 5.8 version from the releases section of this repo
 
 ## Overview
 
